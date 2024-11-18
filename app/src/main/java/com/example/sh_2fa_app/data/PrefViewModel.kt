@@ -2,12 +2,14 @@ package com.example.sh_2fa_app.data
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sh_2fa_app.data.api.ApiService
+import com.example.sh_2fa_app.data.api.CreateUserRequest
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class PrefsViewModel(private val userPrefs: UserPrefs) : ViewModel() {
+class PrefsViewModel(private val userPrefs: UserPrefs, private val apiService: ApiService) : ViewModel() {
     val username: StateFlow<String?> = userPrefs.getUsername()
         .stateIn(viewModelScope, SharingStarted.Eagerly, null);
 
@@ -19,6 +21,28 @@ class PrefsViewModel(private val userPrefs: UserPrefs) : ViewModel() {
 
     val endpoint: StateFlow<String?> = userPrefs.getEndpointKey()
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+
+    fun generateUser(username: String, endpoint: String) {
+        viewModelScope.launch {
+            try {
+                val response = apiService.createUser("http://10.0.2.2:8080/users", CreateUserRequest(username))
+
+                if (response.isSuccessful) {
+                    response.body()?.let { user ->
+                        saveUsername(user.username)
+                        saveUserId(user.id.toString())
+                        saveTotpSecret(user.totpSecret)
+                    } ?: run {
+                        println("Empty body")
+                    }
+                } else {
+                    println("Error: ${response.code()} ${response.message()}")
+                }
+            }catch (e: Exception) {
+                println("Error ${e.message}")
+            }
+        }
+    }
 
     fun saveUsername(username: String) {
         viewModelScope.launch {

@@ -23,7 +23,6 @@ class MainActivity : ComponentActivity() {
         val factory = UserPrefsViewModelFactory(this)
         viewModel = ViewModelProvider(this, factory)[PrefsViewModel::class.java]
 
-
         setContent {
             MainScreen(viewModel)
         }

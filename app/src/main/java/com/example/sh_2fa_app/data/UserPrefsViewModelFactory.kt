@@ -8,8 +8,10 @@ class UserPrefsViewModelFactory(private val context: Context) : ViewModelProvide
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PrefsViewModel::class.java)) {
             val userPrefs = DependencyProvider.provideUserPrefs(context)
+            val apiService = DependencyProvider.provideApiService()
+
             @Suppress("UNCHECKED_CAST")
-            return PrefsViewModel(userPrefs) as T
+            return PrefsViewModel(userPrefs, apiService) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

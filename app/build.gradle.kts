@@ -61,6 +61,11 @@ dependencies {
     implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.androidx.material)
+    implementation("androidx.compose.material:material-icons-extended:1.5.2")
+
+//    implementation("com.google.guava:guava:32.0-android")
+    implementation("dev.turingcomplete:kotlin-onetimepassword:2.4.1")
+
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")

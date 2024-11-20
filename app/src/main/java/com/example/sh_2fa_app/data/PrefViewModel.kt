@@ -25,13 +25,14 @@ class PrefsViewModel(private val userPrefs: UserPrefs, private val apiService: A
     fun generateUser(username: String, endpoint: String) {
         viewModelScope.launch {
             try {
-                val response = apiService.createUser("http://10.0.2.2:8080/users", CreateUserRequest(username))
+                val response = apiService.createUser("", CreateUserRequest(username))
 
                 if (response.isSuccessful) {
                     response.body()?.let { user ->
                         saveUsername(user.username)
-                        saveUserId(user.id.toString())
-                        saveTotpSecret(user.totpSecret)
+                        saveUserId(user.id)
+                        saveTotpSecret(user.totp_secret)
+                        saveEndpoint("")
                     } ?: run {
                         println("Empty body")
                     }

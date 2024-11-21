@@ -23,10 +23,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.sh_2fa_app.ui.AppColors
+import dev.turingcomplete.kotlinonetimepassword.GoogleAuthenticator
 import dev.turingcomplete.kotlinonetimepassword.HmacAlgorithm
 import dev.turingcomplete.kotlinonetimepassword.TimeBasedOneTimePasswordConfig
-import dev.turingcomplete.kotlinonetimepassword.TimeBasedOneTimePasswordGenerator
 import kotlinx.coroutines.delay
+import java.nio.charset.Charset
 import java.util.concurrent.TimeUnit
 
 data class GeneratedTotp(
@@ -37,7 +38,7 @@ data class GeneratedTotp(
 @Composable
 fun TotpGenerator(secret: String) {
     var otp by remember { mutableStateOf("------") }
-    var timeLeft by remember { mutableStateOf(30L) }
+    var timeLeft by remember { mutableLongStateOf(30L) }
 
     fun generateTotp(secret: String, timeInterval: Long = 30L, digits: Int = 6): GeneratedTotp {
         val config = TimeBasedOneTimePasswordConfig(
@@ -46,7 +47,10 @@ fun TotpGenerator(secret: String) {
             timeStep = timeInterval,
             timeStepUnit = TimeUnit.SECONDS
         )
-        val timeBasedOneTimePasswordGenerator = TimeBasedOneTimePasswordGenerator(secret.toByteArray(), config)
+
+        // for some reason TimeBasedOneTimePasswordGenerator class doesn't work with sha1
+        // it generates the wrong code
+        val timeBasedOneTimePasswordGenerator = GoogleAuthenticator(secret.toByteArray(Charset.defaultCharset()))
 
         val code = timeBasedOneTimePasswordGenerator.generate()
         val currentTime = System.currentTimeMillis()

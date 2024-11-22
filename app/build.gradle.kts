@@ -60,6 +60,10 @@ dependencies {
 
     implementation(libs.androidx.datastore.preferences)
 
+    implementation(libs.retrofit)
+    implementation(libs.converter.moshi)
+    implementation(libs.moshi.kotlin)
+
     implementation(libs.androidx.material)
     implementation("androidx.compose.material:material-icons-extended:1.5.2")
 

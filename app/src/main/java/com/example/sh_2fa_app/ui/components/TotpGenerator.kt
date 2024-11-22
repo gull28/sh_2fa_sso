@@ -41,13 +41,6 @@ fun TotpGenerator(secret: String) {
     var timeLeft by remember { mutableLongStateOf(30L) }
 
     fun generateTotp(secret: String, timeInterval: Long = 30L, digits: Int = 6): GeneratedTotp {
-        val config = TimeBasedOneTimePasswordConfig(
-            codeDigits = digits,
-            hmacAlgorithm = HmacAlgorithm.SHA1,
-            timeStep = timeInterval,
-            timeStepUnit = TimeUnit.SECONDS
-        )
-
         // for some reason TimeBasedOneTimePasswordGenerator class doesn't work with sha1
         // it generates the wrong code
         val timeBasedOneTimePasswordGenerator = GoogleAuthenticator(secret.toByteArray(Charset.defaultCharset()))

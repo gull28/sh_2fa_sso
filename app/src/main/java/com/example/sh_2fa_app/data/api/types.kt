@@ -1,5 +1,8 @@
 package com.example.sh_2fa_app.data.api
 
+import com.example.sh_2fa_app.data.models.ServiceItem
+import com.squareup.moshi.Json
+
 data class CreateUserResponse(
     val id: String,
     val username: String,
@@ -8,4 +11,12 @@ data class CreateUserResponse(
 
 data class CreateUserRequest(
     val username: String
+)
+
+data class FetchServicesRequest(
+    val authUserId: String
+)
+
+data class FetchServiceResponse(
+    @Json(name = "services") val services: List<ServiceItem>
 )

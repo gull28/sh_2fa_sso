@@ -3,6 +3,7 @@ package com.example.sh_2fa_app.data
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.sh_2fa_app.data.viewmodels.PrefsViewModel
 
 class UserPrefsViewModelFactory(private val context: Context) : ViewModelProvider.Factory  {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

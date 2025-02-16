@@ -1,9 +1,15 @@
-package com.example.sh_2fa_app.data
+package com.example.sh_2fa_app.data.viewmodels
 
+import android.util.JsonReader
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.sh_2fa_app.data.UserPrefs
 import com.example.sh_2fa_app.data.api.ApiService
 import com.example.sh_2fa_app.data.api.CreateUserRequest
+import com.example.sh_2fa_app.data.models.ServiceItem
+import com.example.sh_2fa_app.data.models.UnboundServiceItem
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -22,10 +28,16 @@ class PrefsViewModel(private val userPrefs: UserPrefs, private val apiService: A
     val endpoint: StateFlow<String?> = userPrefs.getEndpointKey()
         .stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
+    private val _services = MutableLiveData<List<ServiceItem>>(mutableListOf())
+    val services: LiveData<List<ServiceItem>> get() = _services
+
+    private val _unboundServices = MutableLiveData<List<UnboundServiceItem>>(mutableListOf())
+    val unboundServices: LiveData<List<UnboundServiceItem>> get() = _unboundServices
+
     fun generateUser(username: String, endpoint: String) {
         viewModelScope.launch {
             try {
-                val response = apiService.createUser("", CreateUserRequest(username))
+                val response = apiService.createUser("http://10.0.2.2:8080/users", CreateUserRequest(username))
 
                 if (response.isSuccessful) {
                     response.body()?.let { user ->
@@ -43,6 +55,34 @@ class PrefsViewModel(private val userPrefs: UserPrefs, private val apiService: A
                 println("Error ${e.message}")
             }
         }
+    }
+
+    fun fetchServices(): List<ServiceItem>? {
+        viewModelScope.launch {
+            try {
+                // todo: change to pref variable in prod
+                val resp = apiService.fetchServices("http://10.0.2.2:8080/service/${userId.value.toString()}")
+
+                println("Response123123: ${resp.toString()}");
+
+                if (resp.isSuccessful) {
+                    resp.body()?.let { fetchedServices ->
+                        println("Respbody: ${fetchedServices}")
+                        _services.value = fetchedServices.services
+                        _unboundServices.value = fetchedServices.nonBoundServices
+                    } ?: run {
+                        println("Empty body")
+                    }
+                } else {
+                    println("Error: ${resp.code()} ${resp.message()}")
+                }
+            }catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
+        }
+
+        return _services.value;
+
     }
 
     fun saveUsername(username: String) {

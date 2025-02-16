@@ -11,7 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.sh_2fa_app.data.PrefsViewModel
+import com.example.sh_2fa_app.data.viewmodels.PrefsViewModel
 import com.example.sh_2fa_app.ui.AppColors
 import com.example.sh_2fa_app.ui.components.Base
 import com.example.sh_2fa_app.ui.components.TotpGenerator

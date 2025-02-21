@@ -24,11 +24,17 @@ interface ApiService {
         @Url url: String,
     ): Response<FetchBindRequestsResponse>
 
-    @POST
-    suspend fun acceptBindRequest(
-        @Url url: String
-    ): Response<FetchBindRequestsResponse>
+    @DELETE
+    suspend fun unbindServiceLink(
+        @Url url: String,
+    ): Response<FetchServiceResponse>
 
+    // todo:
+//    @POST
+//    suspend fun acceptBindRequest(
+//        @Url url: String
+//    ): Response<FetchBindRequestsResponse>
+//
 //    @DELETE
 //    suspend fun declineBindRequest(
 //        @Url url: String

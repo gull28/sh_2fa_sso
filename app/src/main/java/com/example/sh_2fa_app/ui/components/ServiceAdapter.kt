@@ -1,23 +1,14 @@
 package com.example.sh_2fa_app.ui.components
 
-import android.widget.ToggleButton
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,7 +57,11 @@ fun ServiceAdapter(prefsViewModel: PrefsViewModel) {
                 }
             } else {
                 itemsIndexed(services) { _, item ->
-                    ServiceItem(serviceItem = item)
+                    ServiceItem(serviceItem = item, unBindService = {
+                        prefsViewModel.unbindService(
+                            item.userServiceLinkId
+                        )
+                    })
                 }
             }
         }
@@ -102,13 +97,13 @@ fun ServiceAdapter(prefsViewModel: PrefsViewModel) {
 }
 
 @Composable
-fun ServiceItem(serviceItem: ServiceItem) {
+fun ServiceItem(serviceItem: ServiceItem, unBindService: (id: UInt) -> Unit) {
     Row {
         Text(text = serviceItem.name, color = Color.White, fontSize = 20.sp)
 
-        Switch(checked = serviceItem.enabled, onCheckedChange = {
-            println(it)
-        })
+        Button(onClick = { unBindService(serviceItem.userServiceLinkId) }) {
+            Text(text = "Unbind")
+        }
     }
 }
 

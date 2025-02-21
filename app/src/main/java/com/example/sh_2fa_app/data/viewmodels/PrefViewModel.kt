@@ -83,6 +83,30 @@ class PrefsViewModel(private val userPrefs: UserPrefs, private val apiService: A
         return _bindRequests.value
     }
 
+    fun unbindService(id: UInt) {
+        viewModelScope.launch {
+            try {
+                val resp = apiService.unbindServiceLink("http://10.0.2.2:8080/service/unlink/${id}")
+
+                println("Response123123: ${resp.toString()}");
+
+                if (resp.isSuccessful) {
+                    resp.body()?.let { fetchedServices ->
+                        println("Respbody: ${fetchedServices}")
+                        _services.value = fetchedServices.services
+                        _unboundServices.value = fetchedServices.nonBoundServices
+                    } ?: run {
+                        println("Empty body")
+                    }
+                } else {
+                    println("Error: ${resp.code()} ${resp.message()}")
+                }
+            }catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
+        }
+    }
+
     fun fetchServices(): List<ServiceItem>? {
         viewModelScope.launch {
             try {

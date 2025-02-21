@@ -9,7 +9,8 @@ data class ServiceItem(
     @Json(name = "serviceId") val serviceId: String,
     @Json(name = "name") val name: String,
     @Json(name = "description") val description: String,
-    @Json(name = "enabled") val enabled: Boolean
+    @Json(name = "enabled") val enabled: Boolean,
+    @Json(name = "userServiceLinkId") val userServiceLinkId: UInt,
 )
 
 data class UnboundServiceItem(

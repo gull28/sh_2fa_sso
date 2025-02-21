@@ -2,6 +2,7 @@ package com.example.sh_2fa_app.data.api
 
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.POST
 
 import retrofit2.http.GET
@@ -17,4 +18,19 @@ interface ApiService {
     suspend fun fetchServices(
         @Url url: String,
     ): Response<FetchServiceResponse>
+
+    @GET
+    suspend fun fetchBindRequests(
+        @Url url: String,
+    ): Response<FetchBindRequestsResponse>
+
+    @POST
+    suspend fun acceptBindRequest(
+        @Url url: String
+    ): Response<FetchBindRequestsResponse>
+
+//    @DELETE
+//    suspend fun declineBindRequest(
+//        @Url url: String
+//    ): Response<DeclineBindRequestResponse>
 }

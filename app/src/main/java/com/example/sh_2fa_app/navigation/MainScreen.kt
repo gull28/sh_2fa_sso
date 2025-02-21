@@ -24,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.sh_2fa_app.data.viewmodels.PrefsViewModel
+import com.example.sh_2fa_app.screens.BindRequests
 import com.example.sh_2fa_app.ui.AppColors
 
 
@@ -47,6 +48,7 @@ fun AppNavHost(navController: NavHostController, prefsViewModel: PrefsViewModel,
     ) {
         composable(NavItem.Home.route) { Home(navController = navController, prefsViewModel) }
         composable(NavItem.Service.route) { Service(navController = navController, prefsViewModel) }
+        composable(NavItem.BindRequests.route) { BindRequests(prefsViewModel)}
         composable(NavItem.Settings.route) { Settings(navController = navController, prefsViewModel) }
     }
 }
@@ -54,7 +56,7 @@ fun AppNavHost(navController: NavHostController, prefsViewModel: PrefsViewModel,
 
 @Composable
 fun BottomNavigationBar(navController: NavController) {
-    val items = listOf(NavItem.Home, NavItem.Service, NavItem.Settings)
+    val items = listOf(NavItem.Home, NavItem.Service, NavItem.BindRequests, NavItem.Settings)
 
     NavigationBar(
         containerColor = AppColors.Accent

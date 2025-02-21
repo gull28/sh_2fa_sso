@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.sh_2fa_app.data.UserPrefs
 import com.example.sh_2fa_app.data.api.ApiService
 import com.example.sh_2fa_app.data.api.CreateUserRequest
+import com.example.sh_2fa_app.data.models.BindRequest
 import com.example.sh_2fa_app.data.models.ServiceItem
 import com.example.sh_2fa_app.data.models.UnboundServiceItem
 import kotlinx.coroutines.flow.SharingStarted
@@ -30,6 +31,9 @@ class PrefsViewModel(private val userPrefs: UserPrefs, private val apiService: A
 
     private val _services = MutableLiveData<List<ServiceItem>>(mutableListOf())
     val services: LiveData<List<ServiceItem>> get() = _services
+
+    private val _bindRequests = MutableLiveData<List<BindRequest>>(mutableListOf())
+    val bindRequests: LiveData<List<BindRequest>> get() = _bindRequests
 
     private val _unboundServices = MutableLiveData<List<UnboundServiceItem>>(mutableListOf())
     val unboundServices: LiveData<List<UnboundServiceItem>> get() = _unboundServices
@@ -55,6 +59,28 @@ class PrefsViewModel(private val userPrefs: UserPrefs, private val apiService: A
                 println("Error ${e.message}")
             }
         }
+    }
+
+    fun fetchBindRequests(): List<BindRequest>? {
+        viewModelScope.launch {
+            try {
+                val resp = apiService.fetchBindRequests("http://10.0.2.2:8080/bind/${userId.value.toString()}")
+
+                if(resp.isSuccessful) {
+                    resp.body()?.let { fetchedBindRequests ->
+                        println("Respbody: ${fetchedBindRequests}")
+                        _bindRequests.value = fetchedBindRequests.bindRequests
+                    } ?: run {
+                        println("Empty body")
+                    }
+                }else {
+                    println("error")
+                }
+            }catch (e: Exception) {
+                println("Error: ${e.message}")
+            }
+        }
+        return _bindRequests.value
     }
 
     fun fetchServices(): List<ServiceItem>? {
